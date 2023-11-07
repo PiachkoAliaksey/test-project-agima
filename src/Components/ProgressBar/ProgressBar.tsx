@@ -15,7 +15,6 @@ const ProgressBar: React.FC = () => {
 
     const handlerMoveTouchProgress = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
-
         let width = refDiv.current?.clientWidth;
         const offset = e.nativeEvent.offsetX;
         const divProgress = offset / width! * 100;
@@ -29,38 +28,32 @@ const ProgressBar: React.FC = () => {
             clearInterval(dataInterval);
             data?.setIsPlay(prev => !prev);
             if (data!.audioObject.src.currentTime !== 0) data!.audioObject.src.currentTime = 0;
-            refSpan.current!.style.width = `${data!.audioObject.src.currentTime / data!.audioObject.src.duration * 100}%`;
-
+            refSpan.current!.style.width = `0%`;
         }
     }, [data!.audioObject.src.ended])
 
     useEffect(() => {
         if (data?.isPlay) {
-
-            if (data!.audioObject.src.currentTime !== 0) data!.audioObject.src.currentTime = 0;
-
+            // if (data!.audioObject.src.currentTime !== 0) data!.audioObject.src.currentTime = 0;
             dataInterval = setInterval(() => {
                 refSpan.current!.style.width = `${data!.audioObject.src.currentTime / data!.audioObject.src.duration * 100}%`;
             }, 500)
         } else {
             clearInterval(dataInterval);
-            data!.audioObject.src.currentTime = 0;
         }
-
     }, [data?.isPlay])
 
 
     useEffect(() => {
         clearInterval(dataInterval);
         if (data!.audioObject.src.currentTime !== 0) data!.audioObject.src.currentTime = 0
-        refSpan.current!.style.width = `${data!.audioObject.src.currentTime / data!.audioObject.src.duration * 100}%`
+        refSpan.current!.style.width = `0%`
     }, [data?.currentTrack])
 
 
     return (
         <section className="box-progress">
             <div className={`progress-bar ${data?.isPlay ? ('progress-bar-anim') : ('')}`}>
-                {/* <input className='input-progress' type='range' min='0' max='100' value={currentProgress} step="5" /> */}
                 <div ref={refDiv} onClick={(e) => handlerMoveTouchProgress(e)} className="fillBarProgress">
                     <span ref={refSpan} className="fillColorProgressBar"></span>
                 </div>
