@@ -11,15 +11,27 @@ import { trackList } from "../../api/api";
 
 
 
+
 const BoxControllers: React.FC = () => {
     const data = useContext(UserContext);
     const exampleRef = useRef<HTMLLIElement>(null);
 
-    const handlerClickAction = () => {
-        data?.isPlay ? (data?.audioObject.src.pause(), data?.setIsPlay(prev => !prev), exampleRef.current!.style.backgroundColor = 'rgba(12, 182, 115, 0.5)') : (data?.audioObject.src.play(), data?.setIsPlay(prev => !prev), exampleRef.current!.style.backgroundColor = 'rgb(12, 182, 100)');
+    const handlerClickAction = async () => {
+        if (data?.isPlay) {
+            data?.audioObject.src.pause();
+            data?.setIsPlay(prev => !prev);
+            exampleRef.current!.style.backgroundColor = 'rgba(12, 182, 115, 0.5)';
+        } else {
+            await data?.audioObject.src.play();
+            data?.setIsPlay(prev => !prev);
+            exampleRef.current!.style.backgroundColor = 'rgb(12, 182, 100)';
+        }
     }
 
     const handlerClickPrev = () => {
+        data?.audioObject.src.pause();
+        data?.setIsPlay(false)
+        exampleRef.current!.style.backgroundColor = 'rgba(12, 182, 115, 0.5)';
         data?.setCurrentTrack(prev => {
             if (prev === 0) {
                 return trackList.length - 1
@@ -30,6 +42,9 @@ const BoxControllers: React.FC = () => {
     }
 
     const handlerClickNext = () => {
+        data?.audioObject.src.pause();
+        data?.setIsPlay(false);
+        exampleRef.current!.style.backgroundColor = 'rgba(12, 182, 115, 0.5)';
         data?.setCurrentTrack(prev => {
             if (prev === trackList.length - 1) {
                 return 0
@@ -41,15 +56,15 @@ const BoxControllers: React.FC = () => {
 
     useEffect(() => {
         if (data?.audioObject.src.ended) exampleRef.current!.style.backgroundColor = 'rgba(12, 182, 115, 0.5)';
-
     }, [data?.isPlay])
 
     return (
         <section className="box-controllers">
             <ul className="box-items-controller">
                 <FormButton onClick={() => handlerClickPrev()} key='iconBack'><img src={iconBack} /></FormButton>
-                {data?.isPlay?(<FormButton innerRef={exampleRef} onClick={() => handlerClickAction()} key='iconPlayStream'><img src={iconPlayStream} /></FormButton>):(<FormButton innerRef={exampleRef} onClick={() => handlerClickAction()} key='iconPauseStream'><img className="img-icon" src={iconPauseStream} /></FormButton>)}
-                
+                <FormButton innerRef={exampleRef} onClick={() => handlerClickAction()} key='iconPlayPauseStream'>
+                    <img src={data?.isPlay ? (iconPlayStream) : (iconPauseStream)} />
+                </FormButton>
                 <FormButton onClick={() => handlerClickNext()} key='iconNext'><img src={iconNext} /></FormButton>
             </ul>
         </section>

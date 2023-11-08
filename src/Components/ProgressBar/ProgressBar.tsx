@@ -34,7 +34,6 @@ const ProgressBar: React.FC = () => {
 
     useEffect(() => {
         if (data?.isPlay) {
-            // if (data!.audioObject.src.currentTime !== 0) data!.audioObject.src.currentTime = 0;
             dataInterval = setInterval(() => {
                 refSpan.current!.style.width = `${data!.audioObject.src.currentTime / data!.audioObject.src.duration * 100}%`;
             }, 500)

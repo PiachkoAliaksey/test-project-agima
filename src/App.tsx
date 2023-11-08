@@ -22,7 +22,7 @@ export interface IUseContext {
     img: string;
   }>>,
   currentTrack: number,
-  setCurrentTrack: React.Dispatch<React.SetStateAction<number>>
+  setCurrentTrack: React.Dispatch<React.SetStateAction<number>>,
 }
 
 export const UserContext = createContext<IUseContext | null>(null);
@@ -34,13 +34,12 @@ function App() {
   const [isPlay, setIsPlay] = useState(false);
 
   useEffect(() => {
-    setAudioObject(trackList[currentTrack])
+    setAudioObject(trackList[currentTrack]);
   }, [currentTrack])
 
 
   return (
     <>
-    
       <UserContext.Provider value={{ audioObject, setAudioObject, isPlay, setIsPlay, currentTrack, setCurrentTrack }}>
         <div className='box-container-player'>
           <LeftPartMusicPlayer />
